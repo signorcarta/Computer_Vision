@@ -33,7 +33,7 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 		std::cout << "\ncolumn :" << y << std::endl;
 
 		// need to clone to avoid overwriting input data
-	    cv::Mat image_clone = image.clone();
+	        cv::Mat image_clone = image.clone();
 
 		// Mean on the neighborhood
 		int shift = NEIGHBORHOOD_SIZE / 2;
@@ -136,7 +136,7 @@ int main(int argc, char** argv)
 	case, the size of the window will be the same regardless of the image size,
 	and the image will be scaled to fit within the window. In the latter case, 
 	the window will expand or contract automatically when an image is loaded 
-	according to the image’s true size.
+	according to the imageâ€™s true size.
 	*/	
 	cv::namedWindow("Robocup", CV_WINDOW_AUTOSIZE);
 
