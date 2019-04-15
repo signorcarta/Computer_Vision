@@ -9,6 +9,8 @@
 using namespace std;
 using namespace cv;
 
+
+
 /// Function provided that shows the histograms________________________________________________________
 void showHistogram(std::vector<cv::Mat>& hists)
 {
@@ -47,6 +49,8 @@ void showHistogram(std::vector<cv::Mat>& hists)
 }
 ///____________________________________________________________________________________________________
 
+
+
 int main(int argc, char** argv) {
 
 	//Parameters inizialization
@@ -64,12 +68,16 @@ int main(int argc, char** argv) {
 	bool uniform = true; 
 	bool accumulate = false;
 
+
+
 	//Loading and displaying the image__________________________________________________________________
-	src = cv::imread("C:\\Users\\david\\source\\repos\\Histogram_equalization\\lena.png", 1);
+	src = cv::imread("C:\\Users\\david\\source\\repos\\Histogram_equalization\\countryside.jpg", 1);
 	cv::namedWindow("image", WINDOW_AUTOSIZE);
 	imshow("image", src);
 	waitKey(0);
 	//__________________________________________________________________________________________________
+
+
 
 	//Calculating histograms____________________________________________________________________________
 
@@ -95,6 +103,8 @@ int main(int argc, char** argv) {
 		
 	//__________________________________________________________________________________________________
 
+
+
 	//Equalizing each channel___________________________________________________________________________
 	
 	cv::equalizeHist(b_hist, eq_b_hist);
@@ -116,6 +126,8 @@ int main(int argc, char** argv) {
 	
 	//__________________________________________________________________________________________________
 	
+
+
 	return 0;
 }
 
@@ -127,4 +139,3 @@ int main(int argc, char** argv) {
 	calcHist(&eq_bgr_planes[1], 1, 0, Mat(), eq_g_hist, 1, &histSize, &histRange, uniform, accumulate);
 	calcHist(&eq_bgr_planes[2], 1, 0, Mat(), eq_r_hist, 1, &histSize, &histRange, uniform, accumulate);	
 	*/
-	
