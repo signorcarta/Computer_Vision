@@ -54,14 +54,14 @@ void showHistogram(std::vector<cv::Mat>& hists)
 int main(int argc, char** argv) {
 
 	//Parameters inizialization
-	Mat src;
-	Mat result;
-	Mat b_hist, g_hist, r_hist;
-	Mat eq_b_hist, eq_g_hist, eq_r_hist;
-	Mat eq_b_plane, eq_g_plane, eq_r_plane;
+	cv::Mat src;
+	cv::Mat result;
+	cv::Mat b_hist, g_hist, r_hist;
+	cv::Mat eq_b_hist, eq_g_hist, eq_r_hist;
+	cv::Mat eq_b_plane, eq_g_plane, eq_r_plane;
 
-	std::vector<Mat> bgr_planes;
-	std::vector<Mat> eq_bgr_planes;
+	std::vector<cv::Mat> bgr_planes;
+	std::vector<cv::Mat> eq_bgr_planes;
 	std::vector<cv::Mat> histogram;
 	std::vector<cv::Mat> eq_histogram;
 	std::vector<cv::Mat> dst;
@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
 
 
 	//Loading and displaying the image__________________________________________________________________
-	src = cv::imread("C:\\Users\\david\\source\\repos\\Histogram_equalization\\countryside.jpg", 1);
+	src = cv::imread("C:\\Users\\david\\source\\repos\\Histogram_equalization\\laurea.jpg", 1);
 	cv::namedWindow("image", WINDOW_AUTOSIZE);
 	imshow("image", src);
 	waitKey(0);
@@ -144,3 +144,4 @@ int main(int argc, char** argv) {
 }
 
 
+	
