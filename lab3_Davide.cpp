@@ -107,21 +107,31 @@ int main(int argc, char** argv) {
 
 	//Equalizing each channel___________________________________________________________________________
 	
-	cv::equalizeHist(b_hist, eq_b_hist);
-	cv::equalizeHist(g_hist, eq_g_hist);
-	cv::equalizeHist(r_hist, eq_r_hist);
+	cv::equalizeHist(bgr_planes[0], eq_b_plane);
+	cv::equalizeHist(bgr_planes[1], eq_g_plane);
+	cv::equalizeHist(bgr_planes[2], eq_r_plane);
+
+	cv::calcHist(&eq_b_plane, 1, 0, Mat(), eq_b_hist, 1, &histSize, &histRange, uniform, accumulate);
+	cv::calcHist(&eq_g_plane, 1, 0, Mat(), eq_g_hist, 1, &histSize, &histRange, uniform, accumulate);
+	cv::calcHist(&eq_r_plane, 1, 0, Mat(), eq_r_hist, 1, &histSize, &histRange, uniform, accumulate);
 		
 	eq_histogram.push_back(eq_b_hist);
 	eq_histogram.push_back(eq_g_hist);
 	eq_histogram.push_back(eq_r_hist);
 
-	/// Dispplay equalized histogram
-	showHistogram(eq_histogram);
+	dst.push_back(eq_b_plane);
+	dst.push_back(eq_g_plane);
+	dst.push_back(eq_r_plane);
 
-	/// Display equalized image
-	merge(eq_histogram, dst);
+	///Assembling the equalized image
+	merge(dst, result);
+
+	/// Display equalized histogram
+	showHistogram(eq_histogram);	
+
+	/// Display equalized image	
 	cv::namedWindow("image", WINDOW_AUTOSIZE);
-	imshow("image", dst);
+	imshow("image", result);
 	waitKey(0);
 	
 	//__________________________________________________________________________________________________
@@ -131,11 +141,4 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-//cvtColor(src, dst, COLOR_BGR2GRAY);
-	
-	//split(dst, eq_bgr_planes);
-	/*
-	calcHist(&eq_bgr_planes[0], 1, 0, Mat(), eq_b_hist, 1, &histSize, &histRange, uniform, accumulate);
-	calcHist(&eq_bgr_planes[1], 1, 0, Mat(), eq_g_hist, 1, &histSize, &histRange, uniform, accumulate);
-	calcHist(&eq_bgr_planes[2], 1, 0, Mat(), eq_r_hist, 1, &histSize, &histRange, uniform, accumulate);	
-	*/
+
