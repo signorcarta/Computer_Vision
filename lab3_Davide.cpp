@@ -55,14 +55,16 @@ int main(int argc, char** argv) {
 
 	//Parameters inizialization
 	Mat src;
-	Mat dst;
+	Mat result;
 	Mat b_hist, g_hist, r_hist;
 	Mat eq_b_hist, eq_g_hist, eq_r_hist;
+	Mat eq_b_plane, eq_g_plane, eq_r_plane;
 
 	std::vector<Mat> bgr_planes;
 	std::vector<Mat> eq_bgr_planes;
 	std::vector<cv::Mat> histogram;
 	std::vector<cv::Mat> eq_histogram;
+	std::vector<cv::Mat> dst;
 	
 	int histSize = 256;
 	bool uniform = true; 
