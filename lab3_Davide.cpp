@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
 	cv::Mat src_2;
 	cv::Mat edit_src;
 	cv::Mat result;
-	cv::Mat edit_result;	
+	cv::Mat edit_result;
 	cv::Mat b_hist, g_hist, r_hist; /// bgr color space
 	cv::Mat l_hist, a_hist, bb_hist; /// Lab color space 
 	cv::Mat eq_b_hist, eq_g_hist, eq_r_hist;
@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
 	std::vector<cv::Mat> histogram;
 	std::vector<cv::Mat> eq_histogram;
 
-	std::vector<cv::Mat> lab_histogram;	
+	std::vector<cv::Mat> lab_histogram;
 	std::vector<cv::Mat> eq_lab_histogram;
 	std::vector<cv::Mat> dst;
 	std::vector<cv::Mat> edit_dst;
@@ -87,12 +87,12 @@ int main(int argc, char** argv) {
 	//Loading and displaying the image__________________________________________________________________
 	std::cout << "Loading original image...\n" << std::endl;
 
-	src = cv::imread("C:\\Users\\david\\source\\repos\\Histogram_equalization\\laurea.jpg", 1);
+	src = cv::imread("C:\\Users\\david\\source\\repos\\Histogram_equalization\\lena.png", 1);
 	cv::namedWindow("image", WINDOW_AUTOSIZE);
 	imshow("image", src);
 	waitKey(0);
 
-	std::cout << "Done.\n" << std::endl;
+	std::cout << "Done.\n\n" << std::endl;
 	//__________________________________________________________________________________________________
 
 	src_2 = src.clone(); /// To be used when working on lab color space later
@@ -119,7 +119,7 @@ int main(int argc, char** argv) {
 	/// Function call
 	std::cout << "Showing histograms for \"RGB\" color space: \n";
 	showHistogram(histogram);
-	std::cout << "Done.\n" << std::endl;
+	std::cout << "Done.\n\n" << std::endl;
 
 	//__________________________________________________________________________________________________
 
@@ -134,7 +134,7 @@ int main(int argc, char** argv) {
 	/// Compute the new histograms
 	cv::calcHist(&eq_b_plane, 1, 0, Mat(), eq_b_hist, 1, &histSize, &histRange, uniform, accumulate);
 	cv::calcHist(&eq_g_plane, 1, 0, Mat(), eq_g_hist, 1, &histSize, &histRange, uniform, accumulate);
-	cv::calcHist(&eq_r_plane, 1, 0, Mat(), eq_r_hist, 1, &histSize, &histRange, uniform, accumulate);	
+	cv::calcHist(&eq_r_plane, 1, 0, Mat(), eq_r_hist, 1, &histSize, &histRange, uniform, accumulate);
 
 	/// Assembling the equalized image
 	dst.push_back(eq_b_plane);
@@ -150,14 +150,14 @@ int main(int argc, char** argv) {
 
 	std::cout << "Showing equalized histograms for \"RGB\" color space: \n";
 	showHistogram(eq_histogram);
+	std::cout << "Done.\n" << std::endl;
 
 	/// Display equalized image	
-	std::cout << "Equalized image: \n";
+	std::cout << "Equalized image: \n\n";
 	cv::namedWindow("image", WINDOW_AUTOSIZE);
 	imshow("image", result);
 	waitKey(0);
-	std::cout << "Done.\n" << std::endl;
-
+	
 	//__________________________________________________________________________________________________
 
 
@@ -170,14 +170,13 @@ int main(int argc, char** argv) {
 
 	/// Transforming the image in a different color space
 	cv::cvtColor(src_2, edit_src, COLOR_BGR2Lab);
-	
+
 	///Displaying the original image in the new colorspace
-	std::cout << "Image in \"lab\" color space: \n";
+	std::cout << "Image in \"lab\" color space: \n\n";
 	cv::namedWindow("image", WINDOW_AUTOSIZE);
 	imshow("image", edit_src);
 	waitKey(0);
-	std::cout << "Done.\n" << std::endl;
-
+	
 	/// Separate the image in 3 planes ( L, a and b )	
 	cv::split(edit_src, lab_planes);
 
@@ -193,7 +192,7 @@ int main(int argc, char** argv) {
 
 	std::cout << "Showing histograms for \"lab\" color space: \n";
 	showHistogram(lab_histogram);
-	std::cout << "Done.\n" << std::endl;
+	std::cout << "Done.\n\n" << std::endl;
 	///_________________________________________________________________________________________________
 
 	///Equalizing only one channel______________________________________________________________________
@@ -212,7 +211,7 @@ int main(int argc, char** argv) {
 
 	std::cout << "Showing equalized histogram(s) for \"lab\" color space: \n";
 	showHistogram(eq_lab_histogram);
-	std::cout << "Done.\n" << std::endl;
+	std::cout << "Done.\n\n" << std::endl;
 
 	/// Assembling the equalized image
 	edit_dst.push_back(eq_l_plane);
@@ -226,7 +225,7 @@ int main(int argc, char** argv) {
 	cv::namedWindow("image", WINDOW_AUTOSIZE);
 	imshow("image", edit_result);
 	waitKey(0);
-	std::cout << "Done.\n" << std::endl;
+	std::cout << "Done.\n\n" << std::endl;
 
 	///_________________________________________________________________________________________________
 
