@@ -219,6 +219,7 @@ int main(int argc, char** argv) {
 	edit_dst.push_back(eq_bb_plane);
 
 	merge(edit_dst, edit_result);
+	cv::cvtColor(edit_result, edit_result, COLOR_Lab2BGR);
 
 	/// Display equalized image	
 	std::cout << "Image in \"lab\" color with only one equalized channel: \n";
