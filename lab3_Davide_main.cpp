@@ -10,6 +10,124 @@
 using namespace std;
 using namespace cv;
 
+
+
+//Class Parameters____________________________________________________________________________________
+
+///________________________________________________________________________________________________
+class MedianParameters {
+
+public:
+	cv::Mat input;
+	int size = 3;
+	
+	MedianFilter filter = MedianFilter(Mat(), 0);
+	
+
+public:
+	
+	///Median constructor
+	MedianParameters(Mat in, int sz) {
+		filter = MedianFilter(in, size);
+	}
+
+	
+};
+///_______________________________________________________________________________________________
+
+
+///________________________________________________________________________________________________
+class GaussianParameters {
+public:
+	Mat input;
+	int size = 3;
+	double sigma = 10.0;
+
+	GaussianFilter filter = GaussianFilter(Mat(), 0, 0);
+	
+public:
+
+	///Gaussian Contructor
+	GaussianParameters(Mat in, int sz, double sigma) {
+		 filter = GaussianFilter(in, sz, sigma);
+	}
+};
+///________________________________________________________________________________________________
+
+
+///________________________________________________________________________________________________
+class BilateralParameters {
+public:
+
+	Mat input;
+	int size = 3;
+	double s_color = 10.0;
+	double s_space = 10.0;
+	
+	BilateralFilter filter = BilateralFilter(Mat(), 0, 0, 0);
+
+
+public:
+
+	///Bilateral constructor
+	BilateralParameters(Mat in, int sz, double sigma_range, double sigma_color)
+	{
+		filter = BilateralFilter(in, sz, sigma_range, sigma_range);
+	}
+};
+///________________________________________________________________________________________________
+
+//____________________________________________________________________________________________________
+
+
+
+/// CallBack functions_________________________________________________________________________________
+
+void median_onTrackbar(int val, void* obj) {
+	MedianParameters mdp = *(MedianParameters*) obj;
+	
+	///Update parameters
+	mdp.filter.setSize(mdp.size);
+	
+	///Apply filter and show result
+	mdp.filter.doFilter();
+	Mat filter_result = mdp.filter.getResult();
+	cv::imshow("Median Filter", filter_result);
+	
+}
+
+void gaussian_onTrackbar(int val, void* obj) {
+	GaussianParameters gsp = *(GaussianParameters*)obj;
+	
+	///Update parameters
+	gsp.filter.setSize(gsp.size);
+	gsp.filter.setSigma(gsp.sigma);
+
+	///Apply filter and show result
+	gsp.filter.doFilter();
+	Mat filter_result = gsp.filter.getResult();
+	cv::imshow("Gaussian Filter", filter_result);
+}
+
+void bilateral_onTrackbar(int val, void* obj) {
+	BilateralParameters blp = *(BilateralParameters*)obj;
+
+	///Update parameters
+	blp.filter.setSize(blp.size);
+	blp.filter.setSigmaColor(blp.s_color);
+	blp.filter.setSigmaSpace(blp.s_space);
+
+	///Apply filter and show result
+	blp.filter.doFilter();
+	Mat filter_result = blp.filter.getResult();
+	cv::imshow("Bilateral Filter", filter_result);
+}
+
+
+///____________________________________________________________________________________________________
+
+
+
 /// Function provided that shows the histograms________________________________________________________
 void showHistogram(vector<Mat>& hists)
 {
@@ -49,6 +167,7 @@ void showHistogram(vector<Mat>& hists)
 
 
 
+/// Main_______________________________________________________________________________________________
 int main(int argc, char** argv){
 
 	//Parameters inizialization
@@ -85,7 +204,7 @@ int main(int argc, char** argv){
 	//Loading and displaying the image__________________________________________________________________
 	cout << "Loading original image...\n" << endl;
 
-	src = imread("C:\\Users\\david\\source\\repos\\Histogram_equalization\\image.jpg", 1);
+	src = imread("C:\\Users\\david\\source\\repos\\Histogram_equalization\\overexposed.jpg", 1);
 	namedWindow("image", WINDOW_AUTOSIZE);
 	imshow("image", src);
 	waitKey(0);
@@ -226,14 +345,44 @@ int main(int argc, char** argv){
 	waitKey(0);
 	cout << "Done.\n\n" << endl;
 
-	///_________________________________________________________________________________________________
+	///___________________________________________________________________________________________________
 	
-	//__________________________________________________________________________________________________
-	
+	//____________________________________________________________________________________________________
 	
 
+	//Filtering___________________________________________________________________________________________
+
+	/// Median____________________________________________________________________________________________
+	MedianParameters medianParameters(edit_result);
+	namedWindow("Median Filter widow");
+	createTrackbar("kSize", "Median FIlter window", &(medianParameters.size), 15, median_onTrackbar, (void*) (&medianParameters));
+	median_onTrackbar(1, (void*)(&medianParameters));
+	///___________________________________________________________________________________________________
+
+	/// Gaussian__________________________________________________________________________________________
+	GaussianParameters gaussianParameters(edit_result);
+	namedWindow("Gaussian Filter window");
+	createTrackbar("kSize", "Gaussian FIlter window", &(gaussianParameters.size), 15, gaussian_onTrackbar, (void*)(&gaussianParameters));
+	createTrackbar("sigma", "Gaussian Filter window", &(gaussianParameters.sigma), 100, gaussian_onTrackbar, (void*)(&gaussianParameters));
+	gaussian_onTrackbar(1, (void*)(&gaussianParameters));
+	///___________________________________________________________________________________________________
+
+	/// Bilateral_________________________________________________________________________________________
+	BilateralParameters bilateralParameters(edit_result);
+	namedWindow("Bilateral Filter window");
+	createTrackbar("kSize", "Bilateral FIlter window", &(bilateralParameters.size), 15, bilateral_onTrackbar, (void*)(&bilateralParameters));
+	createTrackbar("sigmaColor", "Bilateral Filter window", &(bilateralParameters.s_color), 100, bilateral_onTrackbar, (void*)(&bilateralParameters));
+	createTrackbar("sigmaSpace", "Bilateral Filter window", &(bilateralParameters.s_space), 100, bilateral_onTrackbar, (void*)(&bilateralParameters));
+	bilateral_onTrackbar(1, (void*)(&gaussianParameters));
+	///___________________________________________________________________________________________________
+
+
+
+	//____________________________________________________________________________________________________
 	return 0;
-}
 
+	
+}
+///____________________________________________________________________________________________________
 
 
