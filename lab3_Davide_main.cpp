@@ -92,7 +92,7 @@ void median_onTrackbar(int val, void* obj) {
 	///Apply filter and show result
 	mdp.filter.doFilter();
 	Mat filter_result = mdp.filter.getResult();
-	cv::imshow("Median Filter", filter_result);
+	cv::imshow("Median Filter window", filter_result);
 	
 }
 
@@ -106,7 +106,7 @@ void gaussian_onTrackbar(int val, void* obj) {
 	///Apply filter and show result
 	gsp.filter.doFilter();
 	Mat filter_result = gsp.filter.getResult();
-	cv::imshow("Gaussian Filter", filter_result);
+	cv::imshow("Gaussian Filter window", filter_result);
 }
 
 void bilateral_onTrackbar(int val, void* obj) {
@@ -120,7 +120,7 @@ void bilateral_onTrackbar(int val, void* obj) {
 	///Apply filter and show result
 	blp.filter.doFilter();
 	Mat filter_result = blp.filter.getResult();
-	cv::imshow("Bilateral Filter", filter_result);
+	cv::imshow("Bilateral Filter window", filter_result);
 }
 
 
@@ -354,15 +354,15 @@ int main(int argc, char** argv){
 
 	/// Median____________________________________________________________________________________________
 	MedianParameters medianParameters(edit_result);
-	namedWindow("Median Filter widow");
-	createTrackbar("kSize", "Median FIlter window", &(medianParameters.size), 15, median_onTrackbar, (void*) (&medianParameters));
+	namedWindow("Median Filter window");
+	createTrackbar("kSize", "Median Filter window", &(medianParameters.size), 15, median_onTrackbar, (void*) (&medianParameters));
 	median_onTrackbar(1, (void*)(&medianParameters));
 	///___________________________________________________________________________________________________
 
 	/// Gaussian__________________________________________________________________________________________
 	GaussianParameters gaussianParameters(edit_result);
 	namedWindow("Gaussian Filter window");
-	createTrackbar("kSize", "Gaussian FIlter window", &(gaussianParameters.size), 15, gaussian_onTrackbar, (void*)(&gaussianParameters));
+	createTrackbar("kSize", "Gaussian Filter window", &(gaussianParameters.size), 15, gaussian_onTrackbar, (void*)(&gaussianParameters));
 	createTrackbar("sigma", "Gaussian Filter window", &(gaussianParameters.sigma), 100, gaussian_onTrackbar, (void*)(&gaussianParameters));
 	gaussian_onTrackbar(1, (void*)(&gaussianParameters));
 	///___________________________________________________________________________________________________
@@ -370,10 +370,10 @@ int main(int argc, char** argv){
 	/// Bilateral_________________________________________________________________________________________
 	BilateralParameters bilateralParameters(edit_result);
 	namedWindow("Bilateral Filter window");
-	createTrackbar("kSize", "Bilateral FIlter window", &(bilateralParameters.size), 15, bilateral_onTrackbar, (void*)(&bilateralParameters));
+	createTrackbar("kSize", "Bilateral Filter window", &(bilateralParameters.size), 15, bilateral_onTrackbar, (void*)(&bilateralParameters));
 	createTrackbar("sigmaColor", "Bilateral Filter window", &(bilateralParameters.s_color), 100, bilateral_onTrackbar, (void*)(&bilateralParameters));
 	createTrackbar("sigmaSpace", "Bilateral Filter window", &(bilateralParameters.s_space), 100, bilateral_onTrackbar, (void*)(&bilateralParameters));
-	bilateral_onTrackbar(1, (void*)(&gaussianParameters));
+	bilateral_onTrackbar(1, (void*)(&bilateralParameters));
 	///___________________________________________________________________________________________________
 
 
