@@ -34,11 +34,6 @@ public:
 	static vector<Mat> loadImages(string path, 
 		                          int& numImg); 
 
-	//Show and Save result
-	static void showAndSavePanoramic(PanoramicImage panor, 
-		                             double ratio, 
-		                             string dstPathName);
-
 	//Project the images on a cylinder surface
 	static void cyProj(PanoramicImage& panor);
 
@@ -68,6 +63,16 @@ public:
 						 vector<float>& totalMeanDist,
 						 vector<vector<float>>& totalDistance,
 						 vector<vector<DMatch>>& totalInliersGoodMatches);
+	//
+	static void findDistance(PanoramicImage pano,
+							 vector<vector<float>>& totalDistance,
+							 vector<vector<KeyPoint>>& totalKPoints,
+							 vector<vector<DMatch>>& totalInliersGoodMatches);
+
+	//Show and Save result
+	static void showAndSavePanoramic(PanoramicImage panor,
+									 double ratio,
+									 string dstPathName);
 
 	///____________________________________________________
 
