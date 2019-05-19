@@ -38,7 +38,7 @@ vector<Mat> PanoramicImage::loadImages(string pat, int& numImg) {
 	int totImages = 23;
 
 	for (int i = 1; i <= totImages; i++) {
-		path = "C:\\Users\\david\\source\\repos\\Keypoints_Descriptors_Matching\\dolomites\\" + to_string(i) + ".png";
+		path = path + to_string(i) + ".png";
 		img = imread(path);
 		images.push_back(img);
 	}
@@ -265,6 +265,70 @@ void PanoramicImage::mergeImg(PanoramicImage panor, Mat& panoramic, vector<float
 	cv::waitKey(0);
 
 
+}
+
+//___________________________________________________________________________________________________________
+
+
+
+//4._________________________________________________________________________________________________________
+
+void PanoramicImage::findDistance(PanoramicImage pano, vector<vector<float>>& totalDistance, vector<vector<KeyPoint>>& totalKPoints, vector<vector<DMatch>>& totalInliersGoodMatches){
+
+		Point2f point1, point2;
+		float dist;
+		vector<float> distance;
+
+		for (int i = 0; i < totalKPoints.size() - 1; i++)
+		{
+			for (int j = 0; j < totalInliersGoodMatches[i].size(); j++)
+			{
+				point1 = totalKPoints[i][totalInliersGoodMatches[i][j].queryIdx].pt;
+				point2 = totalKPoints[i + 1][totalInliersGoodMatches[i][j].trainIdx].pt;
+				dist = pano.imSet[i].cols - point1.x + point2.x;
+				distance.push_back(dist);
+			}
+			totalDistance.push_back(distance);
+			distance.clear();
+		}
+}
+
+void PanoramicImage::showAndSavePanoramic(PanoramicImage panor, double ratio, string dstPathName)
+{
+	// For image cylindrical projection.
+		
+	vector<vector<KeyPoint>> totalKPoints; /// For extraction of ORB features.
+	vector<Mat> totalDescriptors;	
+	vector<vector<DMatch>> totalMatches; /// For the matcher	
+	vector<vector<DMatch>> totalRefinedMatches; /// For refinement of the matches	
+	vector<vector<DMatch>> totalInliersGoodMatches; /// For inliers retrivement	
+	vector<float> totalMeanDist; /// For merging
+
+	// Project the images on a cylinder surface
+	PanoramicImage::cyProj(panor);
+
+	// Extract the ORB features from the images
+	PanoramicImage::orbFeaturesExtractor(panor, totalKPoints, totalDescriptors);
+
+	// Compute the match between the different features of each (consecutive) couple of images
+	PanoramicImage::matcher(panor, totalDescriptors, totalMatches);
+
+	// Refine the matches found
+	PanoramicImage::matchesRefiner(totalMatches, totalRefinedMatches, ratio);
+
+	// Find the set of inliers
+	PanoramicImage::inliersRetriever(totalKPoints, totalRefinedMatches, totalInliersGoodMatches);
+
+	// Find the pixel distance
+	vector<vector<float>> totalDistance;
+	PanoramicImage::findDistance(panor, totalDistance, totalKPoints, totalInliersGoodMatches);
+
+	// Merge images 
+	Mat panoramic;
+	PanoramicImage::mergeImg(panor, panoramic, totalMeanDist, totalDistance, totalInliersGoodMatches);
+
+	imwrite(dstPathName, panoramic);
+	cout << "SAVED IN " << dstPathName << endl;
 }
 
 //___________________________________________________________________________________________________________
