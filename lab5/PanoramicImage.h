@@ -31,8 +31,10 @@ public:
 	///Functions declaration__________________________________
 
 	//Load images
-	static vector<Mat> loadImages(string path, 
-		                          int& numImg); 
+	static void loadImages(string path,
+							int& numImg,
+							PanoramicImage& panor);
+		                  
 
 	//Project the images on a cylinder surface
 	static void cyProj(PanoramicImage& panor);
