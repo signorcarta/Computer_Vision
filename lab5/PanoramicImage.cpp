@@ -28,6 +28,8 @@ PanoramicImage::PanoramicImage(const vector<Mat> imageSet, const double focalLen
 	
 
 
+
+
 // 1.________________________________________________________________________________________________________
 
 //Function that load images 
@@ -41,16 +43,18 @@ void PanoramicImage::loadImages(string path, int& numImg, PanoramicImage& panor)
 		string index = to_string(i);
 		string here = path + index + ".png";
 
-		//////////////////////////////////////////////
-		cout << "This image's path is: " << here << endl;
-		//////////////////////////////////////////////
+		////////////////////////////////////////////////////
+		cout << "This image's path is: " << here << endl; //
+		////////////////////////////////////////////////////
 
 		image = imread(here);
 		panor.imSet.push_back(image);
-		
+		here.clear();
 	}
 
 	/*
+	// ---> Display each image to check <---
+
 	for (int i=0; i < totImages; i++) {
 		namedWindow("current image");
 		imshow("current image", panor.imSet[i]);
@@ -63,7 +67,7 @@ void PanoramicImage::loadImages(string path, int& numImg, PanoramicImage& panor)
 }
 
 //Function that project the images on a cylinder surface 
-void PanoramicImage::cyProj(PanoramicImage& panor) {
+void PanoramicImage::cyProj(PanoramicImage panor) {
 
 	for (int i = 0; i < panor.imSet.size(); i++) {
 		panor.imSet[i] = PanoramicUtils::cylindricalProj(panor.imSet[i], panor.vFOV / 2);
@@ -71,6 +75,8 @@ void PanoramicImage::cyProj(PanoramicImage& panor) {
 }
 
 //___________________________________________________________________________________________________________
+
+
 
 
 
@@ -84,29 +90,34 @@ void PanoramicImage::orbFeaturesExtractor(PanoramicImage panor, vector<vector<Ke
 
 	for (int i = 0; i < panor.imSet.size(); i++) {
 
-	Ptr<FeatureDetector> detector = ORB::create(); ///Initiate ORB detector	
+		Ptr<FeatureDetector> detector = ORB::create(); ///Initiate ORB detector	
 
-	/////////////////////////////////////
-	imshow(to_string(i), panor.imSet[i]);
-	waitKey(0);
-	/////////////////////////////////////
-	detector->detectAndCompute(panor.imSet[i], Mat(), keypoints, descriptors);
+		////////////////////////////////////////
+		imshow(to_string(i), panor.imSet[i]); //
+		waitKey(0);                           //
+		////////////////////////////////////////
 
-	///////////////////////////////////
-	cout << descriptors.size() << endl;
-	cout << keypoints.size() << endl;
-	///////////////////////////////////
+		detector->detectAndCompute(panor.imSet[i], Mat(), keypoints, descriptors);
 
-	totalKPoints.push_back(keypoints);
-	totalDescriptors.push_back(descriptors);
-	keypoints.clear(); ///Throw it away
+		/////////////////////////////////////////
+		cout << descriptors.size() << endl;    //
+		cout << keypoints.size() << endl;      //
+		/////////////////////////////////////////
 
-	// cv::Mat output;
-	// cv::drawKeypoints( panor.imSet[i], keypoints, output );
-	// cv::namedWindow("ORB result");
-	// cv::imshow( "ORB result", output );
-	// cv::waitKey();
+		totalKPoints.push_back(keypoints);
+		totalDescriptors.push_back(descriptors);
+		keypoints.clear(); ///Throw it away
 
+		/*
+		// ---> Draw keypoints and show Image <---
+
+		 cv::Mat output;
+		 cv::drawKeypoints( panor.imSet[i], keypoints, output );
+		 cv::namedWindow("ORB result");
+		 cv::imshow( "ORB result", output );
+		 cv::waitKey();
+		*/
+	 
 	}
 	
 }
@@ -235,6 +246,8 @@ void PanoramicImage::inliersRetriever(vector<vector<KeyPoint>>& totalKPoints, ve
 
 
 
+
+
 //3._________________________________________________________________________________________________________
 
 void PanoramicImage::mergeImg(PanoramicImage panor, Mat& panoramic, vector<float>& totalMeanDist, vector<vector<float>>& totalDistance, vector<vector<DMatch>>& totalInliersGoodMatches) {
@@ -289,6 +302,8 @@ void PanoramicImage::mergeImg(PanoramicImage panor, Mat& panoramic, vector<float
 
 
 
+
+
 //4._________________________________________________________________________________________________________
 
 void PanoramicImage::findDistance(PanoramicImage panor, vector<vector<float>>& totalDistance, vector<vector<KeyPoint>>& totalKPoints, vector<vector<DMatch>>& totalInliersGoodMatches){
@@ -313,7 +328,6 @@ void PanoramicImage::findDistance(PanoramicImage panor, vector<vector<float>>& t
 
 void PanoramicImage::showAndSavePanoramic(PanoramicImage panor, double ratio, string dstPathName)
 {
-	// For image cylindrical projection.
 		
 	vector<vector<KeyPoint>> totalKPoints; /// For extraction of ORB features.
 	vector<Mat> totalDescriptors;	
