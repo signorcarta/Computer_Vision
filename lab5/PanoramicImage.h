@@ -37,7 +37,7 @@ public:
 		                  
 
 	//Project the images on a cylinder surface
-	static void cyProj(PanoramicImage& panor);
+	static void cyProj(PanoramicImage panor);
 
 	//Extract ORB features from the image
 	static void orbFeaturesExtractor(PanoramicImage panor, 
