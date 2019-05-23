@@ -1,5 +1,6 @@
 #ifndef LAB5__PANORAMIC__UTILS__H
 #define LAB5__PANORAMIC__UTILS__H
+
 #include <opencv2/core.hpp>
 
 using namespace std;
