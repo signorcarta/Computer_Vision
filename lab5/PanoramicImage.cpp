@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 #include <math.h>
+#include <string>
 
 #include "opencv2/opencv.hpp" 
 #include <opencv2/core.hpp>
@@ -30,35 +31,42 @@ PanoramicImage::PanoramicImage(const vector<Mat> imageSet, const double focalLen
 // 1.________________________________________________________________________________________________________
 
 //Function that load images 
-vector<Mat> PanoramicImage::loadImages(string pat, int& numImg) {
+void PanoramicImage::loadImages(string path, int& numImg, PanoramicImage& panor) {
 
-	vector<Mat> images; //Vector containing images
-	Mat img;
-	string path = pat;
-	int totImages = 23;
+	int totImages = numImg;
+	Mat image;
 
 	for (int i = 1; i <= totImages; i++) {
-		path = path + to_string(i) + ".png";
-		img = imread(path);
-		images.push_back(img);
+
+		string index = to_string(i);
+		string here = path + index + ".png";
+
+		//////////////////////////////////////////////
+		cout << "This image's path is: " << here << endl;
+		//////////////////////////////////////////////
+
+		image = imread(here);
+		panor.imSet.push_back(image);
+		
 	}
 
 	/*
 	for (int i=0; i < totImages; i++) {
 		namedWindow("current image");
-		imshow("current image", images[i]);
+		imshow("current image", panor.imSet[i]);
 		waitKey(0);
 	}
 	*/
-	numImg = images.size();
-	return images;
+	
+	
+	
 }
 
 //Function that project the images on a cylinder surface 
 void PanoramicImage::cyProj(PanoramicImage& panor) {
 
 	for (int i = 0; i < panor.imSet.size(); i++) {
-		PanoramicUtils::cylindricalProj(panor.imSet[i], panor.vFOV / 2);
+		panor.imSet[i] = PanoramicUtils::cylindricalProj(panor.imSet[i], panor.vFOV / 2);
 	}
 }
 
@@ -76,13 +84,22 @@ void PanoramicImage::orbFeaturesExtractor(PanoramicImage panor, vector<vector<Ke
 
 	for (int i = 0; i < panor.imSet.size(); i++) {
 
-	Ptr<FeatureDetector> detector = ORB::create();///Initiate ORB detector	
-	Ptr<DescriptorExtractor> extractor = ORB::create();///Initiate ORB extractor
+	Ptr<FeatureDetector> detector = ORB::create(); ///Initiate ORB detector	
 
-	detector->detect(panor.imSet[i], keypoints);
-	extractor->compute(panor.imSet[i], keypoints, descriptors);
+	/////////////////////////////////////
+	imshow(to_string(i), panor.imSet[i]);
+	waitKey(0);
+	/////////////////////////////////////
+	detector->detectAndCompute(panor.imSet[i], Mat(), keypoints, descriptors);
+
+	///////////////////////////////////
+	cout << descriptors.size() << endl;
+	cout << keypoints.size() << endl;
+	///////////////////////////////////
+
 	totalKPoints.push_back(keypoints);
 	totalDescriptors.push_back(descriptors);
+	keypoints.clear(); ///Throw it away
 
 	// cv::Mat output;
 	// cv::drawKeypoints( panor.imSet[i], keypoints, output );
@@ -105,6 +122,8 @@ void PanoramicImage::matcher(PanoramicImage panor, vector<Mat>& totalDescriptors
 		matcher->match(totalDescriptors[i], totalDescriptors[i + 1], matches);
 		totalMatches.push_back(matches);
 	}
+
+	matches.clear(); ///Throw it away
 
 	cout << "--->  MATCHES FOUND  <---" << endl;
 }
@@ -168,12 +187,12 @@ void PanoramicImage::matchesRefiner(vector<vector<DMatch>>& totalMatches, vector
 //Function that find the translation between the images (c)
 void PanoramicImage::inliersRetriever(vector<vector<KeyPoint>>& totalKPoints, vector<vector<DMatch>>& totalRefinedMatches, vector<vector<DMatch>>& totalInliersGoodMatches) {
 
-	std::vector<cv::DMatch> inliersGoodMatches; ///will fill the output vector totalInliersGoodMatches
+	vector<DMatch> inliersGoodMatches; ///will fill the output vector totalInliersGoodMatches
 
 	///Parameter for findHomography() function
-	std::vector<cv::Point2f> points1, points2;
-	cv::Mat hmask;
-	std::vector<cv::Mat> totalhmask;
+	vector<Point2f> points1, points2;
+	Mat hmask;
+	vector<Mat> totalhmask;
 
 	///Fill totalHmask______________________________________________________________________
 	for (int i = 0; i < totalKPoints.size() - 1; i++){
@@ -184,7 +203,7 @@ void PanoramicImage::inliersRetriever(vector<vector<KeyPoint>>& totalKPoints, ve
 			points2.push_back(totalKPoints[i + 1][totalRefinedMatches[i][j].trainIdx].pt);
 		}
 
-		findHomography(points1, points2, hmask, RANSAC);
+		findHomography(points1, points2, RANSAC, 3, hmask);
 		totalhmask.push_back(hmask);
 
 		points1.clear(); ///Throw it away
@@ -239,7 +258,7 @@ void PanoramicImage::mergeImg(PanoramicImage panor, Mat& panoramic, vector<float
 		totalMeanDist.push_back(dist);
 	}
 
-	///Apply translation of mean distance value
+	///Apply translation 
 	Mat shiftMat(2, 3, CV_64F, Scalar(0.0));
 
 	shiftMat.Mat::at<double>(0, 0) = 1;
@@ -254,7 +273,7 @@ void PanoramicImage::mergeImg(PanoramicImage panor, Mat& panoramic, vector<float
 	for (int i = 0; i < panor.imSet.size() - 1; i++){
 
 		shiftMat.cv::Mat::at<double>(0, 2) = - totalMeanDist[i];
-		warpAffine(panor.imSet[i + 1], dst, shiftMat, Size(panor.imSet[i + 1].cols - totalMeanDist[i], panor.imSet[i + 1].rows), INTER_CUBIC, BORDER_CONSTANT, Scalar());
+		warpAffine(panor.imSet[(int)i + 1], dst, shiftMat, Size(panor.imSet[(int)i + 1].cols - totalMeanDist[i], panor.imSet[i + 1].rows), INTER_CUBIC, BORDER_CONSTANT, Scalar());
 		hconcat(panoramic, dst, panoramic);
 
 	}
@@ -264,7 +283,6 @@ void PanoramicImage::mergeImg(PanoramicImage panor, Mat& panoramic, vector<float
 	imshow("panoramic", panoramic);
 	cv::waitKey(0);
 
-
 }
 
 //___________________________________________________________________________________________________________
@@ -273,7 +291,7 @@ void PanoramicImage::mergeImg(PanoramicImage panor, Mat& panoramic, vector<float
 
 //4._________________________________________________________________________________________________________
 
-void PanoramicImage::findDistance(PanoramicImage pano, vector<vector<float>>& totalDistance, vector<vector<KeyPoint>>& totalKPoints, vector<vector<DMatch>>& totalInliersGoodMatches){
+void PanoramicImage::findDistance(PanoramicImage panor, vector<vector<float>>& totalDistance, vector<vector<KeyPoint>>& totalKPoints, vector<vector<DMatch>>& totalInliersGoodMatches){
 
 		Point2f point1, point2;
 		float dist;
@@ -285,7 +303,7 @@ void PanoramicImage::findDistance(PanoramicImage pano, vector<vector<float>>& to
 			{
 				point1 = totalKPoints[i][totalInliersGoodMatches[i][j].queryIdx].pt;
 				point2 = totalKPoints[i + 1][totalInliersGoodMatches[i][j].trainIdx].pt;
-				dist = pano.imSet[i].cols - point1.x + point2.x;
+				dist = panor.imSet[i].cols - point1.x + point2.x;
 				distance.push_back(dist);
 			}
 			totalDistance.push_back(distance);
