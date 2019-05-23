@@ -43,26 +43,14 @@ void PanoramicImage::loadImages(string path, int& numImg, PanoramicImage& panor)
 		string index = to_string(i);
 		string here = path + index + ".png";
 
-		////////////////////////////////////////////////////
-		cout << "This image's path is: " << here << endl; //
-		////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////
+		//cout << "This image's path is: " << here << endl; //
+		//////////////////////////////////////////////////////
 
 		image = imread(here);
 		panor.imSet.push_back(image);
 		here.clear();
 	}
-
-	/*
-	// ---> Display each image to check <---
-
-	for (int i=0; i < totImages; i++) {
-		namedWindow("current image");
-		imshow("current image", panor.imSet[i]);
-		waitKey(0);
-	}
-	*/
-
-
 
 }
 
@@ -90,35 +78,23 @@ void PanoramicImage::orbFeaturesExtractor(PanoramicImage panor, vector<vector<Ke
 
 	for (int i = 0; i < panor.imSet.size(); i++) {
 
-		Ptr<FeatureDetector> detector = ORB::create(); ///Initiate ORB detector	
+		Ptr<FeatureDetector> detector = ORB::create(2000); ///Initiate ORB detector	
 
-		////////////////////////////////////////
+		//////////////////////////////////////////
 		//imshow(to_string(i), panor.imSet[i]); //
 		//waitKey(0);                           //
-		////////////////////////////////////////
+		//////////////////////////////////////////
 
 		detector->detectAndCompute(panor.imSet[i], Mat(), keypoints, descriptors);
 
-		/////////////////////////////////////////
+		///////////////////////////////////////////
 		//cout << descriptors.size() << endl;    //
 		//cout << keypoints.size() << endl;      //
-		/////////////////////////////////////////
+		///////////////////////////////////////////
 
 		totalKPoints.push_back(keypoints);
 		totalDescriptors.push_back(descriptors);
 		keypoints.clear(); ///Throw it away
-
-		/*
-		// ---> Draw keypoints and show Image <---
-
-		 cv::Mat output;
-		 cv::drawKeypoints( panor.imSet[i], keypoints, output );
-		 cv::namedWindow("ORB result");
-		 cv::imshow( "ORB result", output );
-		 cv::waitKey();
-		*/
-		
-		
 
 	}
 
@@ -296,7 +272,7 @@ void PanoramicImage::mergeImg(PanoramicImage panor, Mat & panoramic, vector<floa
 	cout << "SHOWING PANORAMIC IN 3... 2... 1...\n" << endl;
 	cv::namedWindow("panoramic");
 	imshow("panoramic", panoramic);
-	cout << "\n[Press any key to continue]\n\n";
+	cout << "[Press any key to continue]\n\n";
 	cv::waitKey(0);
 
 }
