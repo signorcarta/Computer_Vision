@@ -11,10 +11,9 @@
 #include <vector> 
 
 // Constructor
-PanoramicImage::PanoramicImage(const std::vector<cv::Mat> imageSet, const double focalLength, const double verticalFOV)
+PanoramicImage::PanoramicImage(const std::vector<cv::Mat> imageSet, const double verticalFOV)
 {
 	data = imageSet;				//vector of images
-	focal_length = focalLength;     //focal length
 	vFOV = verticalFOV;				// vertical field of view
 }
 
@@ -49,7 +48,7 @@ void PanoramicImage::orbExtract(PanoramicImage panor, std::vector<std::vector<cv
 
 	for (int i = 0; i < panor.data.size(); i++) 
 	{
-		cv::Ptr<cv::FeatureDetector> detector = cv::ORB::create(); //Initiate ORB detector	
+		cv::Ptr<cv::FeatureDetector> detector = cv::ORB::create(2000); //Initiate ORB detector	
 		detector->detect(panor.data[i], keypoints);
 		allKPoints.push_back(keypoints);
 		

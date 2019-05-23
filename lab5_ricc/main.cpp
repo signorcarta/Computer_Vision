@@ -5,8 +5,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
-#define FOCAL_LENGTH 18 //[mm]
-#define vFOV 54 //[degrees] vertical Fiel of View
+#define vFOV 54 //[degrees] vertical Field of View
 #define RATIO 3
 
 int main(int argc, char** argv)
@@ -14,7 +13,7 @@ int main(int argc, char** argv)
 	std::vector<cv::Mat> imagesSet;
 	cv::String path = "dataset_dolomites\\dolomites\\*.png";
 	
-	PanoramicImage panoramic(imagesSet, FOCAL_LENGTH, vFOV);
+	PanoramicImage panoramic(imagesSet, vFOV);
 	panoramic.loadImages(path, panoramic);
     panoramic.showPanoramic(panoramic, RATIO, "dataset_dolomites\\panoramic.png");
 

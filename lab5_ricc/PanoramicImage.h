@@ -12,7 +12,7 @@ class PanoramicImage : PanoramicUtils {
     public:
 
 		//Constructor
-		PanoramicImage(const std::vector<cv::Mat> imageSet, const double focalLength, const double verticalFOV);
+		PanoramicImage(const std::vector<cv::Mat> imageSet, const double verticalFOV);
 	
 
 		//Function declaration
@@ -50,7 +50,6 @@ class PanoramicImage : PanoramicUtils {
 //Variables
 private:
 	std::vector<cv::Mat> data;
-	double focal_length; //[mm] focal length
 	double vFOV; //[degrees] vertical field of view
 };
 #endif //LAB5_PANORAMIC_IMAGE_H
