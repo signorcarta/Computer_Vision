@@ -79,21 +79,17 @@ void PanoramicImage::orbFeaturesExtractor(PanoramicImage panor, vector<vector<Ke
 	for (int i = 0; i < panor.imSet.size(); i++) {
 
 		Ptr<FeatureDetector> detector = ORB::create(2000); ///Initiate ORB detector	
-
-		//////////////////////////////////////////
-		//imshow(to_string(i), panor.imSet[i]); //
-		//waitKey(0);                           //
-		//////////////////////////////////////////
-
 		detector->detectAndCompute(panor.imSet[i], Mat(), keypoints, descriptors);
-
-		///////////////////////////////////////////
-		//cout << descriptors.size() << endl;    //
-		//cout << keypoints.size() << endl;      //
-		///////////////////////////////////////////
-
 		totalKPoints.push_back(keypoints);
 		totalDescriptors.push_back(descriptors);
+
+		///Drawing and showing keypoints
+		Mat output;
+		drawKeypoints( panor.imSet[i], keypoints, output, (255));
+		namedWindow("Keypoints found with ORB");
+		imshow( "Keypoints found with ORB", output );
+		waitKey(0);
+
 		keypoints.clear(); ///Throw it away
 
 	}
@@ -105,7 +101,7 @@ void PanoramicImage::matcher(PanoramicImage panor, vector<Mat> & totalDescriptor
 
 	vector<DMatch> matches;
 	Ptr<BFMatcher> matcher = BFMatcher::create(NORM_HAMMING, false);
-
+	
 	for (int i = 0; i < panor.imSet.size() - 1; i++)
 	{
 		matcher->match(totalDescriptors[i], totalDescriptors[i + 1], matches);
@@ -168,6 +164,9 @@ void PanoramicImage::matchesRefiner(vector<vector<DMatch>> & totalMatches, vecto
 
 	}
 	///_____________________________________________________________________________________
+
+	
+	
 
 	cout << "--->  REFINING DONE     <---" << endl;
 
@@ -326,6 +325,16 @@ void PanoramicImage::showAndSavePanoramic(PanoramicImage panor, double ratio, st
 
 	// Refine the matches found
 	PanoramicImage::matchesRefiner(totalMatches, totalRefinedMatches, ratio);
+
+	///__
+	Mat output;
+	for (int i = 0; i < panor.imSet.size() - 1; i++) {
+		output = Mat();
+		drawMatches(panor.imSet[i], totalKPoints[i], panor.imSet[i + 1], totalKPoints[i + 1], totalRefinedMatches[i], output);
+		imshow("Output: ", output);
+		waitKey(0);
+	}
+	///__
 
 	// Find the set of inliers
 	PanoramicImage::inliersRetriever(totalKPoints, totalRefinedMatches, totalInliersGoodMatches);

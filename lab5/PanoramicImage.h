@@ -10,7 +10,7 @@ using namespace std;
 using namespace cv;
 
 class PanoramicImage : PanoramicUtils {
-	
+
 public:
 
 	///Variables______________________________________________
@@ -32,49 +32,49 @@ public:
 
 	//Load images
 	static void loadImages(string path,
-							int& numImg,
-							PanoramicImage& panor);
-		                  
+		int& numImg,
+		PanoramicImage& panor);
+
 
 	//Project the images on a cylinder surface
 	static void cyProj(PanoramicImage panor);
 
 	//Extract ORB features from the image
-	static void orbFeaturesExtractor(PanoramicImage panor, 
-									 vector<vector<KeyPoint>>& totalKPoints, 
-		                             vector<Mat>& totalDescriptors);
-	
+	static void orbFeaturesExtractor(PanoramicImage panor,
+		vector<vector<KeyPoint>>& totalKPoints,
+		vector<Mat>& totalDescriptors);
+
 	//Compute the match between the different features of each (consecutive) couple of images 
-	static void matcher(PanoramicImage panor, 
-		                vector<Mat>& totalDescriptors, 
-		                vector<vector<DMatch>>& totalMatches);
+	static void matcher(PanoramicImage panor,
+		vector<Mat>& totalDescriptors,
+		vector<vector<DMatch>>& totalMatches);
 
 	//Refine the matches
-	static void matchesRefiner(vector<vector<DMatch>>& totalMatches, 
-		                       vector<vector<DMatch>>& totalRefinedMatches, 
-		                       double ratio);
+	static void matchesRefiner(vector<vector<DMatch>>& totalMatches,
+		vector<vector<DMatch>>& totalRefinedMatches,
+		double ratio);
 
 	//Find the translation between the images
-	static void inliersRetriever(vector<vector<KeyPoint>>& totalKPoints, 
-		                         vector<vector<DMatch>>& totalRefinedMatches, 
-		                         vector<vector<DMatch>>& totalInliersGoodMatches);
+	static void inliersRetriever(vector<vector<KeyPoint>>& totalKPoints,
+		vector<vector<DMatch>>& totalRefinedMatches,
+		vector<vector<DMatch>>& totalInliersGoodMatches);
 
 	//Compute the final panorama
 	static void mergeImg(PanoramicImage panor,
-						 Mat& panoramic,
-						 vector<float>& totalMeanDist,
-						 vector<vector<float>>& totalDistance,
-						 vector<vector<DMatch>>& totalInliersGoodMatches);
+		Mat& panoramic,
+		vector<float>& totalMeanDist,
+		vector<vector<float>>& totalDistance,
+		vector<vector<DMatch>>& totalInliersGoodMatches);
 	//
 	static void findDistance(PanoramicImage pano,
-							 vector<vector<float>>& totalDistance,
-							 vector<vector<KeyPoint>>& totalKPoints,
-							 vector<vector<DMatch>>& totalInliersGoodMatches);
+		vector<vector<float>>& totalDistance,
+		vector<vector<KeyPoint>>& totalKPoints,
+		vector<vector<DMatch>>& totalInliersGoodMatches);
 
 	//Show and Save result
 	static void showAndSavePanoramic(PanoramicImage panor,
-									 double ratio,
-									 string dstPathName);
+		double ratio,
+		string dstPathName);
 
 	///____________________________________________________
 

@@ -6,7 +6,7 @@
 using namespace std;
 using namespace cv;
 
-class PanoramicUtils{
+class PanoramicUtils {
 
 public:
 

@@ -22,15 +22,15 @@ using namespace cv;
 
 
 int main(int argc, char** argv) {
-	
+
 	int imgNum = 23;
 	vector<Mat> imagesSet;
-	
+
 	PanoramicImage panor = PanoramicImage(imagesSet, FOCAL_LEN, vFOV); ///Instantiate an object 
 	panor.loadImages("C:\\Users\\david\\source\\repos\\Keypoints_Descriptors_Matching\\dolomites\\", imgNum, panor); ///Load Images
 
 	//Show and Save panoramic
 	PanoramicImage::showAndSavePanoramic(panor, RATIO, "C:\\Users\\david\\source\\repos\\Keypoints_Descriptors_Matching\\panoramic.png");
-	
+
 	return 0;
 }
