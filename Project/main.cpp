@@ -11,6 +11,13 @@ int main(int argc, char** argv) {
 	namedWindow("Originale image");
 	imshow("Originale image", src);
 	waitKey();
+	
+	Mat tresholded;
+	Preprocess(src, tresholded);
+	namedWindow("Tresholded Image");
+	imshow("Tresholded Image", tresholded);
+	waitKey();
+	
 
 	return 0;
 }
