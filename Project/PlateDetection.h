@@ -8,9 +8,15 @@
 #include <opencv2/features2d.hpp>
 #include <iostream>
 #include <stdio.h>
+#include <vector>;
 
 using namespace cv;
+using namespace std;
 
-void detectPlate(Mat& image, Mat& detected);
+/*
+	This function detects possible plates in the originale image and fills a vector of rectangles representing
+	their position in the image, then uses them to draw them in the image
+*/
+void detectPlate(Mat& image, Mat& detected, String& path, int& platesFound, vector<Rect>& plates);
 
 #endif
