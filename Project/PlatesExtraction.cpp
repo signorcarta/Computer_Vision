@@ -4,18 +4,17 @@ using namespace std;
 using namespace cv;
 
 
-void extractPlate(Mat& image, vector<Rect>& rects, vector<Mat>& plates) {
+void extractPlate(Mat& image, vector<Rect>& rects, vector<Mat>& plates, int& n_of_plates) {
 
-	int howMany = rects.size(); /// How many plates have actually been found
+	Mat temp;
 
-	for (size_t i = 0; i < howMany; i++) {
+	for (size_t i = 0; i < n_of_plates; i++) {
 
-		Mat temp = image.clone();
-		plates[i] = temp(rects[i]); /// FIlling the vector with each detected plate
-
+		temp = image.clone();
+		plates.push_back(temp(rects[i])); /// FIlling the vector with each detected plate
+		
 	}
-	
-	showPlate(plates);
+		
 }
 
 
@@ -31,12 +30,3 @@ void showPlate(vector<Mat>& plates) {
 		waitKey();
 	}
 }
-
-/*
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//          NOTE: These functions do not work. 
-//                Especially I am not sure about how to crop the image given the rectangles.
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
-*/
