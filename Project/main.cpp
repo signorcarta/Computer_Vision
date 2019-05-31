@@ -18,14 +18,20 @@ using namespace std;
 
 int main(int argc, char** argv) {
 
-	//Loading image
-	Mat src = imread("C:\\Users\\david\\source\\repos\\License_plate_recognition\\7.jpg");
+	//Loading image________________________________________________________________________________
+
+	Mat src = imread("C:\\Users\\david\\source\\repos\\License_plate_recognition\\3.jpg"); /// Source image
 	cout << "Showing original image. \n\n" << endl;
 	namedWindow("ORIGINAL IMAGE");
 	imshow("ORIGINAL IMAGE", src);
 	waitKey();
 
-	//Preprocessing
+	//_____________________________________________________________________________________________
+
+
+
+	//Preprocessing________________________________________________________________________________
+
 #ifdef PREPROCESS
 	Mat tresholded;
 	Preprocess(src, tresholded);
@@ -37,11 +43,16 @@ int main(int argc, char** argv) {
 #endif
 #endif
 
-	//Plate detection using cascade classifier
-	Mat detected;
-	vector<Rect> rects;
-	string path = "C:\\Users\\david\\source\\repos\\License_plate_recognition\\classifier\\haarcascade_russian_plate_number.xml";
-	int n_plates = 0;
+	//_____________________________________________________________________________________________
+
+
+
+	//Plate detection using cascade classifier_____________________________________________________
+
+	Mat detected; /// Image with the drawn rectangles
+	vector<Rect> rects; /// Vector of rectangles representing detected plates
+	String path = "C:\\Users\\david\\source\\repos\\License_plate_recognition\\classifier\\haarcascade_russian_plate_number.xml";
+	int n_plates = 0; /// Number of detected plates
 
 	detectPlate(src, detected, path, n_plates, rects);
 
@@ -53,9 +64,19 @@ int main(int argc, char** argv) {
 	waitKey();
 #endif
 
-	//Plate extraction
+	//_____________________________________________________________________________________________
+
+
+
+
+	//Plate extraction_____________________________________________________________________________
+
 	vector<Mat> vecOfPlates;
-	extractPlate(src, rects, vecOfPlates);
+	extractPlate(detected, rects, vecOfPlates, n_plates);
+	showPlate(vecOfPlates);
+
+	//_____________________________________________________________________________________________
+	
 
 	return 0;
 }
