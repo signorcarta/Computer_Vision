@@ -7,6 +7,7 @@
 #include "PreProcessing.h"
 #include "PlateDetection.h"
 #include "PlatesExtraction.h"
+//#include "classifier/haarcascade_russian_plate_number.xml"
 
 
 
@@ -21,10 +22,13 @@ int main(int argc, char** argv) {
 	//Loading image________________________________________________________________________________
 
 	Mat src = imread("C:\\Users\\david\\source\\repos\\License_plate_recognition\\3.jpg"); /// Source image
-	cout << "Showing original image. \n\n" << endl;
+	
+#ifdef SHOW_STEPS
+	cout << "---> Showing original image. \n\n" << endl;
 	namedWindow("ORIGINAL IMAGE");
 	imshow("ORIGINAL IMAGE", src);
 	waitKey();
+#endif
 
 	//_____________________________________________________________________________________________
 
@@ -34,9 +38,11 @@ int main(int argc, char** argv) {
 
 #ifdef PREPROCESS
 	Mat tresholded;
+
 	Preprocess(src, tresholded);
+
 #ifdef SHOW_STEPS
-	cout << "Showing tresholded image. \n\n" << endl;
+	cout << "---> Showing tresholded image. \n\n" << endl;
 	namedWindow("TRESHOLDED IMAGE");
 	imshow("TRESHOLDED IMAGE", tresholded);
 	waitKey();
@@ -57,8 +63,9 @@ int main(int argc, char** argv) {
 	detectPlate(src, detected, path, n_plates, rects);
 
 #ifdef SHOW_STEPS
-	cout << "Showing possible detected plates.\n";
-	cout << "Found " << n_plates << " possible plates.\n\n" << endl;
+	cout << "\n---> Showing possible detected plates.\n";
+	if (n_plates<2) {cout << "---> Found just " << n_plates << " plate.\n\n" << endl;}
+	else {cout << "---> Found " << n_plates << " possible plates.\n\n" << endl;}	
 	namedWindow("DETECTED PLATE");
 	imshow("DETECTED PLATE", detected);
 	waitKey();
@@ -71,9 +78,12 @@ int main(int argc, char** argv) {
 
 	//Plate extraction_____________________________________________________________________________
 
-	vector<Mat> vecOfPlates;
+	vector<Mat> vecOfPlates; /// Vector containing possible plates cropped from the image
+
 	extractPlate(detected, rects, vecOfPlates, n_plates);
+#ifdef SHOW_STEPS
 	showPlate(vecOfPlates);
+#endif
 
 	//_____________________________________________________________________________________________
 	
