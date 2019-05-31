@@ -1,29 +1,19 @@
-#include "opencv2/objdetect/objdetect.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/imgproc.hpp"
-#include <opencv2/opencv.hpp>
-#include <opencv2/features2d.hpp>
-#include <iostream>
-#include <stdio.h>
-
 #include "PlateDetection.h"
 
 using namespace std;
 using namespace cv;
 
-void detectPlate(Mat& image, Mat& detected) {
+void detectPlate(Mat& image, Mat& detected, String& path) {
 	
-	CascadeClassifier plateClassifier; ///Initialize a cascade classifier
-	plateClassifier.load("classifier\\haarcascade_russian_plate_number.xml"); ///Load a pretrained model
-
-	vector<Rect> plates; ///Vector of rectangles of the detected plates
-	plateClassifier.detectMultiScale(image, plates);
+	vector<Rect> plates; ///Vector to be filled with rectangles of the detected plates
+	CascadeClassifier plateClassifier; ///Initializes a cascade classifier
+	plateClassifier.load(path); ///Loads a pretrained model
+	
+	plateClassifier.detectMultiScale(image, plates, 1.1, 2, 0 | CASCADE_SCALE_IMAGE, Size(24, 24)); ///Detect plates in the image
 	
 	for (size_t i = 0; i < plates.size(); i++) {
-
-		///Drawing rectangles on the image
-		rectangle(image, plates[i], 255);
-
+		
+		rectangle(image, plates[i], Scalar(0, 0, 255), 3); ///Draws rectangles on the image
 	}
 
 	detected = image.clone();
