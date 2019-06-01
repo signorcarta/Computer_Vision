@@ -11,7 +11,7 @@
 
 
 
-#define SHOW_STEPS /// Comment/uncomment this line to hide/show intermediate steps 
+//#define SHOW_STEPS /// Comment/uncomment this line to hide/show intermediate steps 
 //#define PROCESS /// If preprocess is disabled ==> change input image in detectPlate()
 
 using namespace cv;
@@ -104,6 +104,26 @@ int main(int argc, char** argv) {
 	#endif
 	}
 	
+	///____________________________________________________________________________________________
+
+	///Get horizontal and vertical histograms______________________________________________________
+
+	Mat vertical, horizontal; /// Histograms
+
+	getHistograms(vertical, horizontal);
+	
+	cout << "---> Showing VERTICAL histogram. \n\n" << endl;
+	namedWindow("VERTICAL HISTOGRAM");
+	imshow("VERTICAL HISTOGRAM", vertical);
+	waitKey();
+
+	cout << "---> Showing HORIZONTAL histogram. \n\n" << endl;
+	namedWindow("HORIZONTAL HISTOGRAM");
+	imshow("HORIZONTAL HISTOGRAM", horizontal);
+	waitKey();
+
+
+
 	///____________________________________________________________________________________________
 
 	return 0;
