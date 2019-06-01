@@ -7,7 +7,7 @@
 
 using namespace cv;
 
-void Preprocess(Mat &srcImage, Mat &tresholdImage);
+void Preprocess(Mat &srcImage, Mat &processed);
 
 Mat maxContrast(Mat grayImage);
 
