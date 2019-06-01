@@ -12,7 +12,7 @@
 
 
 #define SHOW_STEPS /// Comment/uncomment this line to hide/show intermediate steps 
-//#define PREPROCESS /// If preprocess is disabled ==> change input image in detectPlate()
+//#define PROCESS /// If preprocess is disabled ==> change input image in detectPlate()
 
 using namespace cv;
 using namespace std;
@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
 
 	//Loading image________________________________________________________________________________
 
-	Mat src = imread("C:\\Users\\david\\source\\repos\\License_plate_recognition\\5.jpg"); /// Source image
+	Mat src = imread("C:\\Users\\david\\source\\repos\\License_plate_recognition\\4.jpg"); /// Source image
 	
 #ifdef SHOW_STEPS
 	cout << "---> Showing original image. \n\n" << endl;
@@ -31,26 +31,28 @@ int main(int argc, char** argv) {
 #endif
 
 	//_____________________________________________________________________________________________
+	
+	/*
+	
+		//Preprocessing of src image___________________________________________________________________
 
+	#ifdef PROCESS
+		Mat thresholded; ///Thresholded image
 
+		Preprocess(src, thresholded);
 
-	//Preprocessing________________________________________________________________________________
+	#ifdef SHOW_STEPS
+		cout << "---> Showing thresholded image. \n\n" << endl;
+		namedWindow("THRESHOLDED IMAGE");
+		imshow("THRESHOLDED IMAGE", thresholded);
+		waitKey();
+	#endif
+	#endif
 
-#ifdef PREPROCESS
-	Mat thresholded; ///Thresholded image
+		//_____________________________________________________________________________________________
 
-	Preprocess(src, thresholded);
-
-#ifdef SHOW_STEPS
-	cout << "---> Showing thresholded image. \n\n" << endl;
-	namedWindow("THRESHOLDED IMAGE");
-	imshow("THRESHOLDED IMAGE", thresholded);
-	waitKey();
-#endif
-#endif
-
-	//_____________________________________________________________________________________________
-
+	*/
+	
 
 
 	//Plate detection using cascade classifier_____________________________________________________
