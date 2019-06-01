@@ -17,7 +17,7 @@ void Preprocess(Mat& srcImage, Mat& processed) {
 	/// Perform a gaussian blur
 	GaussianBlur(ImageMaxContrast, imgFiltered, Size(5, 5), 0);																						
 	/// Transform grayImage to a binary image
-	threshold(imgFiltered, tresholdImage, 130, 255, THRESH_BINARY_INV); 
+	threshold(imgFiltered, tresholdImage, 0, 255, THRESH_BINARY_INV+THRESH_OTSU); 
 	/// Perform dilation of the image
 	morphologyEx(tresholdImage, processed, MORPH_DILATE, structuringElement, Point(-1,1), 2);
 	
@@ -44,4 +44,26 @@ Mat maxContrast(Mat grayImage) {
 	grayImagePlusTopHatMinusBlackHat = grayImage + imgTopHat - imgBlackHat;
 
 	return(grayImagePlusTopHatMinusBlackHat);
+}
+
+void getHistograms(Mat& ver, Mat& hor) {
+	
+	Mat ret;
+	
+	Mat horizontal(ret.cols, 1, CV_32S);///horizontal histogram
+	horizontal = Scalar::all(0);
+	Mat vertical(ret.rows, 1, CV_32S);///vertical histogram	
+	vertical = Scalar::all(0);
+
+	for (int i = 0; i < ret.cols; i++)
+	{
+		horizontal.at<int>(i, 0) = countNonZero(ret(Rect(i, 0, 1, ret.rows)));
+	}
+
+	for (int i = 0; i < ret.rows; i++)
+	{
+		vertical.at<int>(i, 0) = countNonZero(ret(Rect(0, i, ret.cols, 1)));
+	}
+	ver = vertical.clone();
+	hor = horizontal.clone();
 }
