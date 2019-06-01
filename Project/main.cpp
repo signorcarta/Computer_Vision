@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
 
 	//Loading image________________________________________________________________________________
 
-	Mat src = imread("C:\\Users\\david\\source\\repos\\License_plate_recognition\\3.jpg"); /// Source image
+	Mat src = imread("C:\\Users\\david\\source\\repos\\License_plate_recognition\\5.jpg"); /// Source image
 	
 #ifdef SHOW_STEPS
 	cout << "---> Showing original image. \n\n" << endl;
@@ -37,14 +37,14 @@ int main(int argc, char** argv) {
 	//Preprocessing________________________________________________________________________________
 
 #ifdef PREPROCESS
-	Mat tresholded;
+	Mat thresholded; ///Thresholded image
 
-	Preprocess(src, tresholded);
+	Preprocess(src, thresholded);
 
 #ifdef SHOW_STEPS
-	cout << "---> Showing tresholded image. \n\n" << endl;
-	namedWindow("TRESHOLDED IMAGE");
-	imshow("TRESHOLDED IMAGE", tresholded);
+	cout << "---> Showing thresholded image. \n\n" << endl;
+	namedWindow("THRESHOLDED IMAGE");
+	imshow("THRESHOLDED IMAGE", thresholded);
 	waitKey();
 #endif
 #endif
@@ -64,8 +64,8 @@ int main(int argc, char** argv) {
 
 #ifdef SHOW_STEPS
 	cout << "\n---> Showing possible detected plates.\n";
-	if (n_plates<2) {cout << "---> Found just " << n_plates << " plate.\n\n" << endl;}
-	else {cout << "---> Found " << n_plates << " possible plates.\n\n" << endl;}	
+	if (n_plates<2) {cout << "     Found just " << n_plates << " plate.\n\n" << endl;}
+	else {cout << "     Found " << n_plates << " possible plates.\n" << endl;}	
 	namedWindow("DETECTED PLATE");
 	imshow("DETECTED PLATE", detected);
 	waitKey();
@@ -87,6 +87,22 @@ int main(int argc, char** argv) {
 
 	//_____________________________________________________________________________________________
 	
+
+	///Thresholding the plate______________________________________________________________________
+	Mat thresholded_plate; ///Thresholded plate
+
+	for (int i = 0; i<n_plates; i++) {
+		Preprocess(vecOfPlates[i], thresholded_plate);
+
+	#ifdef SHOW_STEPS
+		cout << "---> Showing thresholded plate. \n\n" << endl;
+		namedWindow("THRESHOLDED PLATE");
+		imshow("THRESHOLDED PLATE", thresholded_plate);
+		waitKey();
+	#endif
+	}
+	
+	///____________________________________________________________________________________________
 
 	return 0;
 }
