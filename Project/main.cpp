@@ -11,8 +11,8 @@
 
 
 
-//#define SHOW_STEPS /// Comment/uncomment this line to hide/show intermediate steps 
-//#define PROCESS /// If preprocess is disabled ==> change input image in detectPlate()
+#define SHOW_STEPS /// Comment/uncomment this line to hide/show intermediate steps 
+//#define DISABLE /// If preprocess is disabled ==> change input image in detectPlate()
 
 using namespace cv;
 using namespace std;
@@ -21,14 +21,14 @@ int main(int argc, char** argv) {
 
 	//Loading image________________________________________________________________________________
 
-	Mat src = imread("C:\\Users\\david\\source\\repos\\License_plate_recognition\\4.jpg"); /// Source image
+	Mat src = imread("C:\\Users\\david\\source\\repos\\License_plate_recognition\\5.jpg"); /// Source image
 	
 #ifdef SHOW_STEPS
 	cout << "---> Showing original image. \n\n" << endl;
 	namedWindow("ORIGINAL IMAGE");
 	imshow("ORIGINAL IMAGE", src);
 	waitKey();
-#endif
+#endif //SHOW_STEPS
 
 	//_____________________________________________________________________________________________
 	
@@ -59,9 +59,9 @@ int main(int argc, char** argv) {
 
 	Mat detected; /// Image with the drawn rectangles
 	vector<Rect> rects; /// Vector of rectangles representing detected plates
-	String path = "C:\\Users\\david\\source\\repos\\License_plate_recognition\\classifier\\haarcascade_russian_plate_number.xml";
 	int n_plates = 0; /// Number of detected plates
-
+	String path = "C:\\Users\\david\\source\\repos\\License_plate_recognition\\classifier\\haarcascade_russian_plate_number.xml";
+	
 	detectPlate(src, detected, path, n_plates, rects);
 
 #ifdef SHOW_STEPS
@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
 	namedWindow("DETECTED PLATE");
 	imshow("DETECTED PLATE", detected);
 	waitKey();
-#endif
+#endif //SHOW_STEPS
 
 	//_____________________________________________________________________________________________
 
@@ -83,48 +83,79 @@ int main(int argc, char** argv) {
 	vector<Mat> vecOfPlates; /// Vector containing possible plates cropped from the image
 
 	extractPlate(detected, rects, vecOfPlates, n_plates);
+
 #ifdef SHOW_STEPS
 	showPlate(vecOfPlates);
-#endif
+#endif //SHOW_STEPS
 
 	//_____________________________________________________________________________________________
 	
 
-	///Thresholding the plate______________________________________________________________________
-	Mat thresholded_plate; ///Thresholded plate
+	//Plate thresholding___________________________________________________________________________
+	vector<Mat> thresholded_plate(n_plates); ///Thresholded plate
 
 	for (int i = 0; i<n_plates; i++) {
-		Preprocess(vecOfPlates[i], thresholded_plate);
+		Preprocess(vecOfPlates[i], thresholded_plate[i]);
 
 	#ifdef SHOW_STEPS
 		cout << "---> Showing thresholded plate. \n\n" << endl;
 		namedWindow("THRESHOLDED PLATE");
-		imshow("THRESHOLDED PLATE", thresholded_plate);
+		imshow("THRESHOLDED PLATE", thresholded_plate[i]);
 		waitKey();
-	#endif
+	#endif //SHOW_STEPS
 	}
 	
-	///____________________________________________________________________________________________
+	//_____________________________________________________________________________________________
 
 	///Get horizontal and vertical histograms______________________________________________________
 
-	Mat vertical, horizontal; /// Histograms
-
-	getHistograms(vertical, horizontal);
+	vector<Mat> vertical(n_plates); /// Vertical histograms  of each detected plate
+	vector<Mat> horizontal(n_plates); /// Horizontal histograms of each detected plate
 	
-	cout << "---> Showing VERTICAL histogram. \n\n" << endl;
-	namedWindow("VERTICAL HISTOGRAM");
-	imshow("VERTICAL HISTOGRAM", vertical);
-	waitKey();
+		for (int i = 0; i < n_plates; i++) {			
 
-	cout << "---> Showing HORIZONTAL histogram. \n\n" << endl;
-	namedWindow("HORIZONTAL HISTOGRAM");
-	imshow("HORIZONTAL HISTOGRAM", horizontal);
-	waitKey();
+			getHistograms(thresholded_plate[i], vertical[i], horizontal[i]);	
+			
+		}
+
+		
+		/*
+			/////////////////////////////////////////////////////////////////////////////////////////////////
+			//                                                                                             //
+			// Need to figure out what the fuck is going on in (*) and (**) and why I can't get the Mat(s) //
+			// in verticale and orizzontale respectively                                                   //
+			//                                                                                             //
+			/////////////////////////////////////////////////////////////////////////////////////////////////
+		*/
+
+
+		for (int i = 0; i < n_plates; i++) {
+
+			Mat verticale = vertical[i]; // (*)
+			Mat orizzontale = horizontal[i]; // (**)
+
+		
+			cout << "verticale size: " << verticale.size() << endl;
+			cout << "orizzontale size: " << orizzontale.size() << endl;
+		
+
+#ifdef DISABLE
+			cout << "---> Showing VERTICAL histogram. \n\n" << endl;
+			namedWindow("VERTICAL HISTOGRAM");
+			imshow("VERTICAL HISTOGRAM", verticale);
+			waitKey();
+
+			cout << "---> Showing HORIZONTAL histogram. \n\n" << endl;
+			namedWindow("HORIZONTAL HISTOGRAM");
+			imshow("HORIZONTAL HISTOGRAM", horizontal);
+			waitKey();
+#endif // DISABLE
+		}
+
+		///____________________________________________________________________________________________
 
 
 
-	///____________________________________________________________________________________________
-
+	
 	return 0;
 }
