@@ -46,24 +46,13 @@ Mat maxContrast(Mat grayImage) {
 	return(grayImagePlusTopHatMinusBlackHat);
 }
 
-void getHistograms(Mat& ver, Mat& hor) {
-	
-	Mat ret;
-	
-	Mat horizontal(ret.cols, 1, CV_32S);///horizontal histogram
-	horizontal = Scalar::all(0);
-	Mat vertical(ret.rows, 1, CV_32S);///vertical histogram	
-	vertical = Scalar::all(0);
+void getHistograms(Mat& src, Mat& ver, Mat& hor) {
+	Mat ROIimg = src;
+	Mat vertMat(ROIimg.rows, 1, CV_32S);
+	Mat horzMat(1, ROIimg.cols, CV_32S);
+	vertMat = Scalar::all(0);
+	horzMat = Scalar::all(0);
+	reduce(ROIimg, vertMat, 1, REDUCE_SUM, CV_32S);
+	reduce(ROIimg, horzMat, 0, REDUCE_SUM, CV_32S);
 
-	for (int i = 0; i < ret.cols; i++)
-	{
-		horizontal.at<int>(i, 0) = countNonZero(ret(Rect(i, 0, 1, ret.rows)));
-	}
-
-	for (int i = 0; i < ret.rows; i++)
-	{
-		vertical.at<int>(i, 0) = countNonZero(ret(Rect(0, i, ret.cols, 1)));
-	}
-	ver = vertical.clone();
-	hor = horizontal.clone();
 }
