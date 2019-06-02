@@ -47,12 +47,34 @@ Mat maxContrast(Mat grayImage) {
 }
 
 void getHistograms(Mat& src, Mat& ver, Mat& hor) {
-	Mat ROIimg = src;
+
+	Mat ROIimg = src.clone();
 	Mat vertMat(ROIimg.rows, 1, CV_32S);
 	Mat horzMat(1, ROIimg.cols, CV_32S);
+
 	vertMat = Scalar::all(0);
 	horzMat = Scalar::all(0);
 	reduce(ROIimg, vertMat, 1, REDUCE_SUM, CV_32S);
 	reduce(ROIimg, horzMat, 0, REDUCE_SUM, CV_32S);
 
 }
+
+void showHistograms(Mat& ver, Mat& hor) {
+
+	Mat vertical_hist = ver.clone();
+	Mat horizontal_hist = hor.clone();
+
+	//cvtColor(vertical_hist, vertical_hist, COLOR_GRAY2BGR);
+	//cvtColor(horizontal_hist, horizontal_hist, COLOR_GRAY2BGR);
+
+	namedWindow("Showing vertical histogram");
+	imshow("Showing vertical histogram", vertical_hist);
+	waitKey();
+
+	namedWindow("Showing horizontal histogram");
+	imshow("Showing horizontal histogram", horizontal_hist);
+	waitKey();
+
+}
+
+
