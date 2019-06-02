@@ -11,6 +11,6 @@ void Preprocess(Mat &srcImage, Mat &processed);
 
 Mat maxContrast(Mat grayImage);
 
-void getHistograms(Mat& ver, Mat& hor);
+void getHistograms(Mat& src, Mat& ver, Mat& hor);
 
 #endif
