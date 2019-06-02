@@ -13,4 +13,6 @@ Mat maxContrast(Mat grayImage);
 
 void getHistograms(Mat& src, Mat& ver, Mat& hor);
 
+void showHistograms(Mat& ver, Mat& hor);
+
 #endif
