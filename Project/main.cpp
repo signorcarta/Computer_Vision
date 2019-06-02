@@ -11,7 +11,7 @@
 
 
 
-#define SHOW_STEPS /// Comment/uncomment this line to hide/show intermediate steps 
+//#define SHOW_STEPS /// Comment/uncomment this line to hide/show intermediate steps 
 //#define DISABLE /// If preprocess is disabled ==> change input image in detectPlate()
 
 using namespace cv;
@@ -91,6 +91,7 @@ int main(int argc, char** argv) {
 	//_____________________________________________________________________________________________
 	
 
+
 	//Plate thresholding___________________________________________________________________________
 	vector<Mat> thresholded_plate(n_plates); ///Thresholded plate
 
@@ -107,7 +108,9 @@ int main(int argc, char** argv) {
 	
 	//_____________________________________________________________________________________________
 
-	///Get horizontal and vertical histograms______________________________________________________
+
+
+	//Get horizontal and vertical histograms______________________________________________________
 
 	vector<Mat> vertical(n_plates); /// Vertical histograms  of each detected plate
 	vector<Mat> horizontal(n_plates); /// Horizontal histograms of each detected plate
@@ -119,43 +122,21 @@ int main(int argc, char** argv) {
 		}
 
 		
-		/*
-			/////////////////////////////////////////////////////////////////////////////////////////////////
-			//                                                                                             //
-			// Need to figure out what the fuck is going on in (*) and (**) and why I can't get the Mat(s) //
-			// in verticale and orizzontale respectively                                                   //
-			//                                                                                             //
-			/////////////////////////////////////////////////////////////////////////////////////////////////
-		*/
+		//cout << "vertical size: " << vertical.size() << endl;
+		//cout << "horizzontal size: " << horizontal.size() << endl;
+				
+	//____________________________________________________________________________________________
+		
 
 
+	///Display horizontal and vertical histograms_________________________________________________
+		
 		for (int i = 0; i < n_plates; i++) {
-
-			Mat verticale = vertical[i]; // (*)
-			Mat orizzontale = horizontal[i]; // (**)
-
 		
-			cout << "verticale size: " << verticale.size() << endl;
-			cout << "orizzontale size: " << orizzontale.size() << endl;
-		
-
-#ifdef DISABLE
-			cout << "---> Showing VERTICAL histogram. \n\n" << endl;
-			namedWindow("VERTICAL HISTOGRAM");
-			imshow("VERTICAL HISTOGRAM", verticale);
-			waitKey();
-
-			cout << "---> Showing HORIZONTAL histogram. \n\n" << endl;
-			namedWindow("HORIZONTAL HISTOGRAM");
-			imshow("HORIZONTAL HISTOGRAM", horizontal);
-			waitKey();
-#endif // DISABLE
+			showHistograms(vertical[i], horizontal[i]); // DOESN'T WORK //
 		}
 
-		///____________________________________________________________________________________________
-
-
-
+	///____________________________________________________________________________________________
 	
 	return 0;
 }
