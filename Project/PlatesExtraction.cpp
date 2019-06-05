@@ -4,29 +4,23 @@ using namespace std;
 using namespace cv;
 
 
-void extractPlate(Mat& image, vector<Rect>& rects, vector<Mat>& plates, int& n_of_plates) {
+void extractPlate(Mat& image, vector<Rect>& rects, Mat& plate) {
 
 	Mat temp;
-
-	for (size_t i = 0; i < n_of_plates; i++) {
-
-		temp = image.clone();
-		plates.push_back(temp(rects[i])); /// FIlling the vector with each detected plate
-		
-	}
-		
+	
+	temp = image.clone();
+	plate = temp(rects[0]); /// FIlling the vector with detected plate
+			
 }
 
 
-void showPlate(vector<Mat>& plates) {
+void showPlate(Mat& plate) {
 
 	Mat result;
 
-	for (size_t i = 0; i<plates.size(); i++) {
-
-		result = plates[i].clone();
-		namedWindow("Showing plate found");
-		imshow("Showing plate found", result);
-		waitKey();
-	}
+	result = plate.clone();
+	namedWindow("plate");
+	imshow("plate", result);
+	waitKey();
+	
 }
