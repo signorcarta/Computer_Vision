@@ -17,11 +17,11 @@ using namespace std;
 	and crops the original image filling a vector with the crops of the original image that
 	should be the detected plates
 */
-void extractPlate(Mat& image, vector<Rect>& rects, vector<Mat>& plates, int& n_of_plates);
+void extractPlate(Mat& image, vector<Rect>& rects, Mat& plate);
 
 /*
 	This function gets in iput the vector of images of the detected plates and displays them
 */
-void showPlate(vector<Mat>& plates);
+void showPlate(Mat& plate);
 
 #endif
