@@ -22,7 +22,7 @@ using namespace std;
 
 int main(int argc, char** argv) {
 
-	//Loading image________________________________________________________________________________
+	//Image loading________________________________________________________________________________
 
 	Mat src = imread("C:\\Users\\david\\source\\repos\\License_plate_recognition\\7.jpg"); /// Source image
 	
@@ -33,11 +33,11 @@ int main(int argc, char** argv) {
 	waitKey();
 #endif //SHOW_STEPS
 
-	//____________________________________________________________________________________________
+	//_____________________________________________________________________________________________
 	
 
 
-	//Plate detection using cascade classifier_____________________________________________________
+	//Plate detection _____________________________________________________________________________
 
 	Mat detected; /// Image with the drawn rectangles
 	vector<Rect> rects; /// Vector of rectangles representing detected plates
@@ -56,8 +56,7 @@ int main(int argc, char** argv) {
 	//_____________________________________________________________________________________________
 
 
-
-
+	
 	//Plate extraction_____________________________________________________________________________
 
 	Mat vecOfPlates; /// Vector containing plate cropped from the image
@@ -72,10 +71,6 @@ int main(int argc, char** argv) {
 	//_____________________________________________________________________________________________
 	
 
-
-	
-
-	
 
 	//Chars detection______________________________________________________________________________
 	
