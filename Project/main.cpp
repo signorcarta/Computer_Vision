@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 
 	//Loading image________________________________________________________________________________
 
-	Mat src = imread("C:\\Users\\david\\source\\repos\\License_plate_recognition\\6.jpg"); /// Source image
+	Mat src = imread("C:\\Users\\david\\source\\repos\\License_plate_recognition\\7.jpg"); /// Source image
 	
 #ifdef SHOW_STEPS
 	cout << "---> Showing original image. \n\n" << endl;
@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 	Mat detected; /// Image with the drawn rectangles
 	vector<Rect> rects; /// Vector of rectangles representing detected plates
 	int n_plates = 0; /// Number of detected plates [LAST TIME IS NEEDED]
-	String path = "C:\\Users\\david\\source\\repos\\License_plate_recognition\\classifier\\haarcascade_license_plate.xml";
+	String path = "classifier\\haarcascade_license_plate.xml";
 	
 	detectPlate(src, detected, path, n_plates, rects);
 
@@ -63,44 +63,46 @@ int main(int argc, char** argv) {
 	Mat vecOfPlates; /// Vector containing plate cropped from the image
 
 	extractPlate(detected, rects, vecOfPlates);
-
+	
 #ifdef SHOW_STEPS
-	showPlate(vecOfPlates);
 	cout << "\n---> Showing cropped plate.\n";
+	showPlate(vecOfPlates);
 #endif //SHOW_STEPS
 
 	//_____________________________________________________________________________________________
 	
 
 
-	/*Plate thresholding___________________________________________________________________________
 	
-	Mat thresholded_plate; ///Thresholded plate
-	
-	Preprocess(vecOfPlates, thresholded_plate);
-
-	#ifdef SHOW_STEPS
-		cout << "\n---> Showing thresholded plate. \n" << endl;
-		namedWindow("THRESHOLDED PLATE");
-		imshow("THRESHOLDED PLATE", thresholded_plate);
-		waitKey();
-	#endif //SHOW_STEPS
-	
-	
-	//_____________________________________________________________________________________________*/
 
 	
 
 	//Chars detection______________________________________________________________________________
-		Mat detectedChars;
-		Canny(vecOfPlates, detectedChars, 100, 200);
-		detectChars(detectedChars, detectedChars);
+	
+	Mat detectedChars; /// Image with bounded chars
+	vector<Rect> charsRects; /// Vector containing the rectangles related to chars
+	
+	detectChars(vecOfPlates, detectedChars, charsRects);
 
 //#ifdef SHOW_STEPS
-		cout << "---> Showing detected chars. \n" << endl;
-		namedWindow("DETECTED CHARS");
-		imshow("DETECTED CHARS", detectedChars);
-		waitKey();
+	cout << "---> Showing detected chars. \n" << endl;
+	namedWindow("DETECTED CHARS");
+	imshow("DETECTED CHARS", detectedChars);
+	waitKey();
+//#endif //SHOW_STEPS
+
+	//_____________________________________________________________________________________________
+
+
+
+	//Chars extraction_____________________________________________________________________________
+	vector<Mat> singleChars; /// Vector contatining the cropped chars
+	
+	extractChars(detectedChars, charsRects, singleChars);
+
+//#ifdef SHOW_STEPS
+	cout << "\n---> Showing cropped chars.\n";
+	showChars(singleChars);
 //#endif //SHOW_STEPS
 
 	//_____________________________________________________________________________________________
