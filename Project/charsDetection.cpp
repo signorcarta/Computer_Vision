@@ -52,16 +52,19 @@ void detectChars(Mat& image, Mat& result) {
 
 
 	///________________________________________________________________________________________________
-	int wid = thresh.rows;
-	int hgt = thresh.cols;
+	int hgt = thresh.rows;
+	int wid = thresh.cols;
 
 	/// Draw bonding rects
 	//Mat drawing = Mat::zeros(thresh.size(), CV_8UC3);
 	for (int i = 0; i < contours.size(); i++){
 
+		bool min_dims = (boundRect[i].width > wid / 75) && (boundRect[i].height > hgt / 10);
+		bool max_dims = (boundRect[i].width < wid / 2) && (boundRect[i].height < hgt );
 		Scalar color = (0, 255, 255);
+
 		//drawContours(thresh, contours_poly, i, color, 1, 8, vector<Vec4i>(), 0, Point());
-		if ( (boundRect[i].width > wid/10) && (boundRect[i].height > hgt/10) && (boundRect[i].width < wid) && (boundRect[i].height < hgt) ) {
+		if ( min_dims && max_dims ) {
 
 			rectangle(thresh, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0);
 		}
