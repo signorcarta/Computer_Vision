@@ -14,6 +14,10 @@
 using namespace cv;
 using namespace std;
 
-void detectChars(Mat& image, Mat& result);
+void detectChars(Mat& image, Mat& result, vector<Rect>& charsRects);
+
+void extractChars(Mat& image, vector<Rect>& charsRects, vector<Mat>& charsCollection);
+
+void showChars(vector<Mat>& charsCollection);
 
 #endif
