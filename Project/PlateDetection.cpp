@@ -10,7 +10,7 @@ void detectPlate(Mat& image, Mat& detected, String& path, int& platesFound, vect
 
 	CascadeClassifier plateClassifier; ///Initializes a cascade classifier
 	plateClassifier.load(path); ///Loads a pretrained model	
-	plateClassifier.detectMultiScale(src, plates, 1.1, 3, 0 | CASCADE_SCALE_IMAGE, Size(30,30)); ///Detect plates in the image
+	plateClassifier.detectMultiScale(src, plates, 1.1, 3, 0 | CASCADE_SCALE_IMAGE, Size(30,35)); ///Detect plates in the image
 	n_platesFound = plates.size();
 
 
@@ -18,7 +18,7 @@ void detectPlate(Mat& image, Mat& detected, String& path, int& platesFound, vect
 
 	if (n_platesFound < 1) {
 
-		resize(src, src, Size(), 2.5, 2.5);
+		resize(src, src, Size(), 2,2);
 		plateClassifier.detectMultiScale(src, plates, 1.1, 3, 0 | CASCADE_SCALE_IMAGE, Size(30, 30));
 		n_platesFound = plates.size();
 
@@ -35,7 +35,7 @@ void detectPlate(Mat& image, Mat& detected, String& path, int& platesFound, vect
 
 		while (keepGoing) {
 
-			plateClassifier.detectMultiScale(src, plates, 1.1, 3 + i, 0 | CASCADE_SCALE_IMAGE, Size(30,30));
+			plateClassifier.detectMultiScale(src, plates, 1.1, 3 + i, 0 | CASCADE_SCALE_IMAGE, Size(30,60));
 			if (plates.size() == 1) { keepGoing = false; }
 			else i++;
 
