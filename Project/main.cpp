@@ -10,10 +10,6 @@
 #include "charsDetection.h"
 
 
-//#include "classifier/haarcascade_russian_plate_number.xml"
-
-
-
 //#define SHOW_STEPS /// Comment/uncomment this line to hide/show intermediate steps 
 //#define DISABLE /// 
 
@@ -24,7 +20,7 @@ int main(int argc, char** argv) {
 
 	//Image loading________________________________________________________________________________
 
-	Mat src = imread("C:\\Users\\david\\source\\repos\\License_plate_recognition\\7.jpg"); /// Source image
+	Mat src = imread("6.jpg"); /// Source image
 	
 #ifdef SHOW_STEPS
 	cout << "---> Showing original image. \n\n" << endl;
@@ -95,9 +91,12 @@ int main(int argc, char** argv) {
 	
 	extractChars(detectedChars, charsRects, singleChars);
 
-//#ifdef SHOW_STEPS
-	cout << "\n---> Showing cropped chars.\n";
-	showChars(singleChars);
+//#ifdef SHOW_STEPS	
+	if (charsRects.empty()) { cout << "--->   Couldn't read the plate !   <---" << endl; }
+	else{ 
+		cout << "\n---> Showing cropped chars.\n";
+		showChars(singleChars); 
+	}	
 //#endif //SHOW_STEPS
 
 	//_____________________________________________________________________________________________
