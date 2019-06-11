@@ -7,9 +7,12 @@ using namespace cv;
 void extractPlate(Mat& image, vector<Rect>& rects, Mat& plate) {
 
 	Mat temp;
+	Mat plate_;
 	
 	temp = image.clone();
-	plate = temp(rects[0]); /// FIlling the vector with detected plate
+	plate_ = temp(rects[0]); /// FIlling the vector with detected plate
+	resize(plate_, plate_, Size(300, 100));
+	plate = plate_.clone();
 			
 }
 
