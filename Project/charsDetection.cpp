@@ -17,7 +17,7 @@ void detectChars(Mat& image, Mat& result, vector<Rect>& charsRects) {
 	/// Perform some preprocessing_________________________________________________________________
 	cvtColor(src, src, COLOR_BGR2GRAY); /// Go Gray
 	bilateralFilter(src, filtered, 9, 100, 100); /// Perform some filtering
-	threshold(filtered, thresh, 127, 255, THRESH_BINARY + THRESH_OTSU);
+	threshold(filtered, thresh, 127, 255, THRESH_BINARY + THRESH_OTSU); /// Perform some thresholding
 	Canny(thresh, canny, 100, 200); /// Perform Canny algorithm
 
 	///____________________________________________________________________________________________
@@ -50,13 +50,16 @@ void detectChars(Mat& image, Mat& result, vector<Rect>& charsRects) {
 	///Draw bonding rectangles_____________________________________________________________________
 		
 	for (int i = 0; i < contours.size(); i++){
-		Scalar color = (0, 255, 255);
-		bool min_dims = boundRect[i].width > 10 && boundRect[i].height > 40;
+		
+		bool min_dims = boundRect[i].width > 5 && boundRect[i].height > 40;
 		bool max_dims = boundRect[i].width < 80 && boundRect[i].height < 100;
-			
+		
+		//cout << "\n bounding width: " << boundRect[i].width << endl;
+		//cout << "bounding height: " << boundRect[i].height << endl;
+
 		if ( min_dims && max_dims) {
 			
-			rectangle(src_, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0);
+			rectangle(src_, boundRect[i].tl(), boundRect[i].br(), Scalar(0, 255, 0), 1, 8, 0);
 			charsRects.push_back(boundRect[i]);			
 
 		}
@@ -69,49 +72,55 @@ void detectChars(Mat& image, Mat& result, vector<Rect>& charsRects) {
 
 void extractChars(Mat& image, vector<Rect>& charsRects, vector<Mat>& charsCollection) {
 
-	Mat image_ = image.clone();
-	vector<Rect> charsRects_ ; 
+	if(!charsRects.empty()) {
 
-	///Get a copy of the array of rects
-	for (int i=0; i<charsRects.size(); i++) {
+		Mat image_ = image.clone();
+		vector<Rect> charsRects_;
 
-		charsRects_.push_back(charsRects[i]);
-	}
+		///Get a copy of the array of rects
+		for (int i = 0; i < charsRects.size(); i++) {
 
-
-
-	/// Sort the array of rectangles__________________________
-	struct byPosition {
-
-		bool operator() (Rect& a, const Rect& b) {
-			return a.x < b.x;
+			charsRects_.push_back(charsRects[i]);
 		}
 
-	};
-	  
-	sort(charsRects_.begin(), charsRects_.end(), byPosition());
-	///_______________________________________________________
+		/// Sort the array of rectangles__________________________
+		struct byPosition {
 
+			bool operator() (Rect& a, const Rect& b) {
+				return a.x < b.x;
+			}
 
-	/// FIll the output vector with ordered chars_____________
-	for (int i = 0; i < charsRects_.size(); i++) {
+		};
 
-		Mat original = image_.clone();
-		charsCollection.push_back(original(charsRects_[i]));
-		
+		sort(charsRects_.begin(), charsRects_.end(), byPosition());
+		///_______________________________________________________
+
+		/// FIll the output vector with ordered chars_____________
+		for (int i = 0; i < charsRects_.size(); i++) {
+
+			Mat original = image_.clone();
+			charsCollection.push_back(original(charsRects_[i]));
+
+		}
+		///_______________________________________________________
 	}
-	///_______________________________________________________
+
+
 }
+	
 
 void showChars(vector<Mat>& charsCollection) {
 
-	for (int i = 0; i < charsCollection.size(); i++) {
+	if (!charsCollection.empty()) {
 
-		Mat temp = charsCollection[i].clone();
+		for (int i = 0; i < charsCollection.size(); i++) {
 
-		namedWindow("Char");
-		imshow("Char", temp);
-		waitKey();
+			Mat temp = charsCollection[i].clone();
+
+			namedWindow("Char");
+			imshow("Char", temp);
+			waitKey();
+		}
 
 	}
 
