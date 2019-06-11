@@ -10,8 +10,7 @@
 #include "charsDetection.h"
 
 
-//#define SHOW_STEPS /// Comment/uncomment this line to hide/show intermediate steps 
-//#define DISABLE /// 
+//#define SHOW_STEPS /// Comment/uncomment this line to hide/show intermediate steps  
 
 using namespace cv;
 using namespace std;
@@ -20,7 +19,7 @@ int main(int argc, char** argv) {
 
 	//Image loading________________________________________________________________________________
 
-	Mat src = imread("6.jpg"); /// Source image
+	Mat src = imread("images\\7.jpg"); /// Source image
 	
 #ifdef SHOW_STEPS
 	cout << "---> Showing original image. \n\n" << endl;
@@ -75,12 +74,12 @@ int main(int argc, char** argv) {
 	
 	detectChars(vecOfPlates, detectedChars, charsRects);
 
-//#ifdef SHOW_STEPS
+#ifdef SHOW_STEPS
 	cout << "---> Showing detected chars. \n" << endl;
 	namedWindow("DETECTED CHARS");
 	imshow("DETECTED CHARS", detectedChars);
 	waitKey();
-//#endif //SHOW_STEPS
+#endif //SHOW_STEPS
 
 	//_____________________________________________________________________________________________
 
@@ -91,14 +90,35 @@ int main(int argc, char** argv) {
 	
 	extractChars(detectedChars, charsRects, singleChars);
 
-//#ifdef SHOW_STEPS	
+#ifdef SHOW_STEPS	
 	if (charsRects.empty()) { cout << "--->   Couldn't read the plate !   <---" << endl; }
 	else{ 
 		cout << "\n---> Showing cropped chars.\n";
 		showChars(singleChars); 
 	}	
-//#endif //SHOW_STEPS
+#endif //SHOW_STEPS
 
+	//_____________________________________________________________________________________________
+
+
+
+	//Chars saving_________________________________________________________________________________
+	if (!charsRects.empty()) {
+		for (int i = 0; i < singleChars.size(); i++) {
+			/// Every char/letter gets saved twice so:
+			if (i % 2 == 0) {
+
+				int j = i / 2; /// Actual index name
+				Mat ch = singleChars[i].clone();
+				//imwrite("C:\\Users\\david\\source\\repos\\License_plate_recognition\\chars\\" + to_string(j) + ".jpg", ch);
+				cout << "Char\\letter [" + to_string(j) + "] saved in folder \"chars\"" << endl;
+
+			}
+			
+
+		}
+		
+	}
 	//_____________________________________________________________________________________________
 
 
